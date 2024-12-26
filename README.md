@@ -149,3 +149,4 @@ This README file is licensed under the [MIT License][license].
 [license]: /LICENSE
 [queries.txt]: /queries.txt
 [exploitdb.txt]: /exploitdb.txt
+[gdorking.py]: /gdorking.py
