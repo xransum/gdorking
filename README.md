@@ -129,6 +129,12 @@ The first file, [queries.txt][queries.txt], contains a list of queries that are 
 
 The second file, [exploitdb.txt][exploitdb.txt], contains a list of queries that are automatically generated using the [gdorking.py][gdorking.py] script. The queries are generated using the Exploit DB archive and are automatically updated when the script is run.
 
+To update the [exploitdb.txt][exploitdb.txt]:
+
+```bash
+python3 gdorking.py --output exploitdb.txt
+```
+
 
 ## Contributing
 
