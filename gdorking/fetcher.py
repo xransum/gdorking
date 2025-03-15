@@ -16,7 +16,7 @@ requests.packages.urllib3.disable_warnings()
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 OUTPUT_FILE = os.path.join(get_data_path(), "google-dorks")
-SUPPORTED_FILE_FORMATS = ["txt", "json", "csv"]
+SUPPORTED_FILE_FORMATS = ["txt", "md", "json", "csv"]
 OUTPUT_FILE_PATHS = {ff: f"{OUTPUT_FILE}.{ff}" for ff in SUPPORTED_FILE_FORMATS}
 
 EXPLOIT_DB_ENDPOINT = "https://www.exploit-db.com"
@@ -27,6 +27,18 @@ EXPLOIT_DB_GOOGLE_DORKING_ENDPOINT = (
 
 @retry((urllib3.exceptions.HTTPError), delay=1, backoff=2)
 def fetch_page(url: str, is_json=False) -> str:
+    """Fetch a page from a URL.
+
+    Args:
+        url (str): The URL to fetch.
+        is_json (bool, optional): Whether the response is JSON. Defaults to False.
+
+    Raises:
+        urllib3.exceptions.HTTPError: If the request fails.
+
+    Returns:
+        str: The response from the URL.
+    """
     logging.debug(f"Fetching URL {url!r}")
 
     request = requests.get(
@@ -90,6 +102,14 @@ def get_exploit_db_data() -> list:
 
 
 def normalize_data(data: list) -> list:
+    """Normalize the data from the Exploit DB Google Dorking page.
+
+    Args:
+        data (list): The data from the Exploit DB Google Dorking page.
+
+    Returns:
+        (list): The normalized data.
+    """
     for dork in sorted(data, key=lambda x: int(x["id"])):
         url_title = soupify_html(dork.get("url_title", ""))
 
@@ -100,10 +120,25 @@ def normalize_data(data: list) -> list:
 
 
 def soupify_html(html: str) -> BeautifulSoup:
+    """Create a BeautifulSoup object from HTML.
+
+    Args:
+        html (str): The HTML to parse.
+
+    Returns:
+        (BeautifulSoup): The BeautifulSoup object.
+    """
     return BeautifulSoup(html, "html.parser")
 
 
 def write_output_data(data: list, file_format: str) -> None:
+    """Write the output data to a file.
+
+    Args:
+        data (list): The data to write.
+        file_format (str): The file format to write the data in.
+    """
+
     if file_format not in SUPPORTED_FILE_FORMATS:
         raise ValueError(
             f"Unsupported file format {file_format!r}. "
@@ -115,9 +150,22 @@ def write_output_data(data: list, file_format: str) -> None:
         with open(output_file, "w") as f:
             for dork in sorted(data, key=lambda x: x["title"]):
                 f.write(f"{dork['title']}\n")
+
+    if file_format == "md":
+        with open(output_file, "w") as f:
+            f.write("# Google Dorks\n\n")
+
+            for category in set(dork["category"]["cat_title"] for dork in data):
+                f.write(f"## {category}\n")
+                for dork in sorted(data, key=lambda x: x["title"]):
+                    if dork["category"]["cat_title"] == category:
+                        f.write(f"- [{dork['title']}]({dork['url']})\n")
+                f.write("\n")
+
     elif file_format == "json":
         with open(output_file, "w") as f:
             json.dump(data, f, indent=4)
+
     elif file_format == "csv":
         headers = [
             "id",
@@ -143,6 +191,7 @@ def write_output_data(data: list, file_format: str) -> None:
             writer = csv.DictWriter(f, fieldnames=headers)
             writer.writeheader()
             writer.writerows(csv_data)
+
     else:
         raise ValueError(
             f"Supported file format {file_format!r}, but not implemented."
@@ -150,6 +199,7 @@ def write_output_data(data: list, file_format: str) -> None:
 
 
 def main() -> None:
+    """Main function for gdorking."""
     results = get_exploit_db_data()
     data = normalize_data(results)
 
