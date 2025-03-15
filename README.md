@@ -2,6 +2,13 @@
 
 gdorking, a short-name for Google Dorking ("Google Hacking"), this document is a consolidated breakdown of advanced search queries and filtering to not only used to get the best search results, but also a passive non-obtrusive method of information gathering against unsecured and improperly configured websites.
 
+## Data Sources
+
+This repository auto-generates a list of all the latest Google Dorking queries from the Exploit DB archive. The queries are stored in the [data][data] directory in three different formats: text, JSON, and CSV.
+
+- [Text File][textdata]
+- [JSON File][jsondata]
+- [CSV File][csvdata]
 
 ## Operators
 
@@ -88,7 +95,6 @@ gdorking, a short-name for Google Dorking ("Google Hacking"), this document is a
 - **-:** Search for results that don’t mention a word or phrase.
   - Example: `jobs -apple`
 
-
 ### Deprecated Operators
 
 - **#..#:** Search within a range of numbers.
@@ -112,41 +118,16 @@ gdorking, a short-name for Google Dorking ("Google Hacking"), this document is a
 - **daterange:** Search for results from a particular date range.
   - Example: `daterange:11278-13278`
 
-
-## Usage Guidelines
-
-- Ensure proper syntax for each operator.
-- Combine operators for more refined search results.
-- Be mindful of deprecated operators.
-- Experiment with different queries for optimal results.
-
-
-## Queries
-
-There are two files that contain the queries used for Google Dorking.
-
-The first file, [queries.txt][queries.txt], contains a list of queries that are manually generated and are not automatically updated. So if you want to add more queries, feel free to submit a pull request, see [Contributing][contributing] on how to do so.
-
-The second file, [exploitdb.txt][exploitdb.txt], contains a list of queries that are automatically generated using the [gdorking.py][gdorking.py] script. The queries are generated using the Exploit DB archive and are automatically updated when the script is run.
-
-To update the [exploitdb.txt][exploitdb.txt]:
-
-```bash
-python3 gdorking.py --output exploitdb.txt
-```
-
-
 ## Contributing
 
 Contributions are welcome! Feel free to submit pull requests to add more operators or improve existing information.
-
 
 ## License
 
 This README file is licensed under the [MIT License][license].
 
-[contributing]: #contributing
 [license]: /LICENSE
-[queries.txt]: /queries.txt
-[exploitdb.txt]: /exploitdb.txt
-[gdorking.py]: /gdorking.py
+[textdata]: ./data/google-dorking.txt
+[jsondata]: ./data/google-dorking.json
+[csvdata]: ./data/google-dorking.csv
+[data]: ./data/
