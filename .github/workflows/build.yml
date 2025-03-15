@@ -1,0 +1,66 @@
+# .github/workflows/build.yml
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * 0'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Prevent Bot Loop
+        if: github.actor == 'github-actions[bot]'
+        run: echo "Skipping workflow commit by bot" && exit 0
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Verify Python Version
+        run: python -c "import sys; print(sys.version)"
+
+      - name: Upgrade Pip
+        run: |
+          pip install pip
+          pip --version
+
+      - name: Install Poetry
+        run: |
+          pip install poetry
+          poetry --version
+
+      - name: Install Dependencies
+        run: |
+          poetry install
+
+      - name: Run gdorking Script
+        run: |
+          poetry run python -m gdorking.fetcher
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and Push Changes
+        run: |
+          git add data/google-dorks.*
+          if git diff-index --quiet HEAD --; then
+            echo "No changes to commit"
+          else
+            git commit -m "Updated data files."
+            git push
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
