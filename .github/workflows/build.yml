@@ -55,7 +55,7 @@ jobs:
 
       - name: Commit and Push Changes
         run: |
-          git add data/google-dorks.*
+          git add --force data/google-dorks.*
           if git diff-index --quiet HEAD --; then
             echo "No changes to commit"
           else
