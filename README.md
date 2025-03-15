@@ -4,9 +4,10 @@ gdorking, a short-name for Google Dorking ("Google Hacking"), this document is a
 
 ## Data Sources
 
-This repository auto-generates a list of all the latest Google Dorking queries from the Exploit DB archive. The queries are stored in the [data][data] directory in three different formats: text, JSON, and CSV.
+This repository auto-generates a list of all the latest Google Dorking queries from the Exploit DB archive. The queries are stored in the [data][data] directory in three different formats: text, markdown, and JSON. The data is updated on a weekly cadence.
 
 - [Text File][textdata]
+- [Markdown File][markdowndata]
 - [JSON File][jsondata]
 - [CSV File][csvdata]
 
@@ -128,6 +129,7 @@ This README file is licensed under the [MIT License][license].
 
 [license]: /LICENSE
 [textdata]: ./data/google-dorking.txt
+[markdowndata]: ./data/google-dorking.md
 [jsondata]: ./data/google-dorking.json
 [csvdata]: ./data/google-dorking.csv
 [data]: ./data/
