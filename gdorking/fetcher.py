@@ -151,11 +151,25 @@ def write_output_data(data: list, file_format: str) -> None:
             for dork in sorted(data, key=lambda x: x["title"]):
                 f.write(f"{dork['title']}\n")
 
-    if file_format == "md":
+    elif file_format == "md":
         with open(output_file, "w") as f:
             f.write("# Google Dorks\n\n")
 
-            for category in set(dork["category"]["cat_title"] for dork in data):
+            categories = sorted(
+                set(dork["category"]["cat_title"] for dork in data)
+            )
+            f.write("Table of Contents\n")
+            f.write(
+                "\n".join(
+                    [
+                        f"- [{category}](#{category.lower().replace(' ', '-')})"
+                        for category in categories
+                    ]
+                )
+                + "\n\n"
+            )
+
+            for category in categories:
                 f.write(f"## {category}\n")
                 for dork in sorted(data, key=lambda x: x["title"]):
                     if dork["category"]["cat_title"] == category:
